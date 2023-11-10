@@ -9,6 +9,13 @@ docker pull apache/activemq-artemis
 docker pull bitnami/kafka
 ```
 
+
 https://kafka.apache.org/
 
 https://hub.docker.com/r/wurstmeister/kafka/
+
+
+## Message oriented programming with PHP
+
+Framework welches entsprechende Strukturen anbietet:
+- https://github.com/ecotoneframework/ecotone
