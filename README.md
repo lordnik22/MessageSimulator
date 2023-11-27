@@ -12,6 +12,11 @@ Steps
 1. docker-compose up
 2. Start sample-application within intellij
 
+
+## Documentation
+
+https://drive.google.com/drive/folders/1E3qmszlbwIsQAW5mp99LMlFbxcFYdoH-
+
 ## In beginning there was chaos
 ```text
 ||||
@@ -20,8 +25,20 @@ Steps
 \||/
  \/
 ```
+
 - zookeeper = coordination service for distributed applications
 - KRaft =  Apache Kafka Raft (KRaft) is the consensus protocol that was introduced in KIP-500 to remove Apache Kafka’s dependency on ZooKeeper for metadata management. 
+
+https://cwiki.apache.org/confluence/display/KAFKA/Compatibility+Matrix
+
+https://docs.spring.io/spring-kafka/reference/quick-tour.html
+
+https://docs.spring.io/spring-kafka/reference/kafka/connecting.html
+
+https://docs.confluent.io/home/overview.html
+
+https://docs.spring.io/spring-kafka/api/org/springframework/kafka/core/package-summary.html
+
 https://kafka.apache.org/quickstart
 ```bash
 docker-compose up -d
@@ -30,7 +47,30 @@ docker pull apache/activemq-artemis
 
 ```
 
+## Microservices for the Win
+### Tracing of Messages
+
+https://microservices.io/patterns/observability/distributed-tracing.html
+
+### Saga pattern for transaction spanning multiple services
+
+
+#### Chereography
+https://docs.axoniq.io/reference-guide/v/3.1/part-ii-domain-logic/sagas
+
+#### Orchestration
+
+https://camel.apache.org/components/4.0.x/eips/saga-eip.html
+## Compare API specs/protocols
+
+https://docs.spring.io/spring-boot/docs/current/reference/html/messaging.html#messaging.amqp
+
+- https://www.oracle.com/java/technologies/java-message-service.html
+
+Java Message Service (JMS) vs Advanced Message Queuing Protocol (AMQP)
+
 ## Compare Message Broker
+
 Apache ActiveMQ is a great workhorse full of features and nice stuff.
 It's not the fastest MQ software around but fast enough for most use
 cases. Among features are flexible clustring, fail-over, integrations
@@ -58,6 +98,8 @@ area of MQ and brokers, I guess Kafka is overkill. On the other hand -
 if you have a decent sized server cluster and wonder how to push as
 many messages as possible through it - give Kafka a spin!
 
+
+### What about RabbitMQ?
 
 ## Apache Arrow
 
