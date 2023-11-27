@@ -52,6 +52,8 @@ docker pull apache/activemq-artemis
 
 https://microservices.io/patterns/observability/distributed-tracing.html
 
+https://zipkin.io/
+
 ### Saga pattern for transaction spanning multiple services
 
 
