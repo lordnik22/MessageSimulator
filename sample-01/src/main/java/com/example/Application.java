@@ -77,18 +77,13 @@ public class Application {
 	}
 
 	@KafkaListener(id = "fooGroup", topics = "topic1")
-	public void listen(Foo2 foo) {
+	public void listen(String foo) {
 		logger.info("Received: " + foo);
-		if (foo.getFoo().startsWith("fail")) {
-			throw new RuntimeException("failed");
-		}
-		this.exec.execute(() -> System.out.println("Hit Enter to terminate..."));
 	}
 
 	@KafkaListener(id = "dltGroup", topics = "topic1.DLT")
 	public void dltListen(byte[] in) {
 		logger.info("Received from DLT: " + new String(in));
-		this.exec.execute(() -> System.out.println("Hit Enter to terminate..."));
 	}
 
 	@Bean
