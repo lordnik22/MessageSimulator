@@ -133,3 +133,95 @@ Framework welches entsprechende Strukturen anbietet:
       DYNAMIC_CONFIG_ENABLED: 'true'
     volumes:
       - ~/kui/config.yml:/etc/kafkaui/dynamic_config.yaml
+
+
+# Message Orientierte Logistik
+
+Im Folgenden soll der Ablauf und die einzelnen Stationen der Logistik der haar-shop.ch aufgelistet werden. Die einzelnen Komponenten werden vereinfacht abgebildet.
+
+## Bestellungen generieren
+Ein Generator erzeugt konstant Bestellungen.
+Eine Bestellung besteht aus folgenden Eigenschaften:
+- Bestellnummer
+- Kunde
+    - Kundennummer
+    - PLZ
+    - Geschlecht
+    - Kundenstatus
+        - Neukunde oder Bestandeskunde
+- Positionen
+    - Produktnummer
+    - Anzahl
+- Preis
+- Bezahlmethode
+    - Kreditkarte, Rechnung oder Twint
+- Versandart
+    - A-Post oder B-Post
+- Teillieferung
+
+Eine generierte Bestellung hat den Status **importiert**.
+
+## Bestellungen prüfen
+Importierte Bestellungen werden dann auf Sonderheiten geprüft.
+
+### Export
+Bestellungen aus einem bestimmten Nummernkreis, sollen in einer separaten Tabelle erfasst und für den weiteren Versand gesperrt werden.
+> Hintergrund: haar-shop.ch liefert grundsätzlich nur in die Schweiz. Jedoch gibt es in der Schweiz mit der Gemeinde Samnaun ein Zollausschlussgebiet. Bestellungen aus Samnaun müssen also als Exporte behandelt werden und entsprechende Dokumente beigelegt werden.
+
+### Betrugsversuch
+Es kommt immer wieder vor, dass es unter den Kunden Betrüger hat. Die folgenden Kriterien deuten auf Betrug hin und die Bestellungen werden dann entsprechend markiert und gegen Signatur versendet.
+- Kundentyp: Neukunde
+- Bezahlmethode: Rechnung
+- Preis: >= CHF 100
+
+## Kommissionslisten erstellen
+Die Produkte aus Bestellungen, welche komplett kommissionierbar sind, sollen in Kommissionslisten erfasst werden.
+
+## Kommissionierung simulieren
+Die Abarbeitung der Kommissionierungslisten soll simuliert werden. Wurden alle Bestellpositionen einer sich auf einer Kommissionierungsliste befindenden Bestellung kommissioniert, gilt die Bestellung als **verpackungsbereit**.
+
+## Teillieferungen aktivieren
+haar-shop.ch ist bestrebt, alle Bestellungen so schnell wie möglich zur Kund*in zu bringen. Gleichzeitig soll eine Bestellung möglichst komplett ausgeliefert werden. Sollte für eine Bestellung nicht alle Bestellpositionen verfügbar sein, wird die Verarbeitung so lange wie möglich herausgezögert, in der Hoffnung, dass die fehlenden Produkte im Verlauf des Tages noch angeliefert werden. Ab 17:00 wird auf allen pendenten Bestellungen die Teillieferung aktiviert.
+
+## Lagerbestände führen
+Normalerweise werden die Lagerbestände von dem Logistiksystem
+
+
+
+## SmartyPants
+
+SmartyPants converts ASCII punctuation characters into "smart" typographic punctuation HTML entities. For example:
+
+|                |ASCII                          |HTML                         |
+|----------------|-------------------------------|-----------------------------|
+|Single backticks|`'Isn't this fun?'`            |'Isn't this fun?'            |
+|Quotes          |`"Isn't this fun?"`            |"Isn't this fun?"            |
+|Dashes          |`-- is en-dash, --- is em-dash`|-- is en-dash, --- is em-dash|
+
+
+
+## UML diagrams
+
+You can render UML diagrams using [Mermaid](https://mermaidjs.github.io/). For example, this will produce a sequence diagram:
+
+```mermaid
+sequenceDiagram
+Alice ->> Bob: Hello Bob, how are you?
+Bob-->>John: How about you John?
+Bob--x Alice: I am good thanks!
+Bob-x John: I am good thanks!
+Note right of John: Bob thinks a long<br/>long time, so long<br/>that the text does<br/>not fit on a row.
+
+Bob-->Alice: Checking with John...
+Alice->John: Yes... John, how are you?
+```
+
+And this will produce a flow chart:
+
+```mermaid
+graph LR
+A[Square Rect] -- Link text --> B((Circle))
+A --> C(Round Rect)
+B --> D{Rhombus}
+C --> D
+```
