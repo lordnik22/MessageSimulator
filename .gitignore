@@ -1,2 +1,3 @@
 .idea/**/*
 /consumer/target/**/*
+.DS_Store

@@ -57,6 +57,7 @@ import java.util.Map;
 public class Application {
 
     private final Logger logger = LoggerFactory.getLogger(Application.class);
+    private static Boolean running = false;
 
     @Autowired
     private KafkaTemplate<Object, Object> kafkaTemplate;
@@ -66,16 +67,42 @@ public class Application {
     }
 
     @Bean
+    public NewTopic topic() {
+        return new NewTopic("orderCreated", 1, (short) 1);
+    }
+
+    @Bean
 	@Profile("default") // Don't run from test(s)
 	public ApplicationRunner runner() {
 		return args -> {
             int i = 0;
             while(true) {
-                System.out.println("Send message");
-                kafkaTemplate.send("topic1", "test_" + i);
-                Thread.sleep(4000);
+                if (this.running) {
+                    kafkaTemplate.send("orderCreated", "test_" + i);
+                    System.out.println("Send message");
+                } else {
+                    System.out.println("Idle");
+                }
+
+                Thread.sleep(Math.random() * 10000);
                 i++;
             }
 		};
 	}
+
+    public void start() {
+        this.running = true;
+    }
+
+    public void stop() {
+        this.running = false;
+    }
+
+    public void toggle() {
+        this.running = !this.running;
+    }
+
+    public Boolean isRunning() {
+        return this.running;
+    }
 }
