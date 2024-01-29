@@ -16,6 +16,8 @@
 
 package com.app;
 
+import java.sql.Timestamp;
+
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -50,7 +52,7 @@ public class Application {
 
     private final Logger logger = LoggerFactory.getLogger(Application.class);
     private static Boolean running = false;
-    private int interval = 5000;
+    private static int interval = 5000;
 
     private static Application INSTANCE;
 
@@ -74,10 +76,10 @@ public class Application {
 	@Profile("default") // Don't run from test(s)
 	public ApplicationRunner runner() {
 		return args -> {
-            int i = 0;
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
             while(true) {
                 if (this.running) {
-                    kafkaTemplate.send("orderCreated", "test_" + i);
+                    kafkaTemplate.send("orderCreated", "test_" + timestamp.getTime());
                     System.out.println("Send message");
                 } else {
                     System.out.println("Idle");
@@ -85,7 +87,7 @@ public class Application {
 
                 // Thread.sleep(Math.random() * 10000);
                 Thread.sleep(this.interval);
-                i++;
+                System.out.println(String.format("Interval set to %dms", this.interval));
             }
 		};
 	}
@@ -103,6 +105,7 @@ public class Application {
     public void interval(int interval) {
         System.out.println(String.format("SET Interval to %dms", interval));
         this.interval = interval;
+        System.out.println(String.format("Interval set to %dms", this.interval));
     }
 
     public void toggle() {
