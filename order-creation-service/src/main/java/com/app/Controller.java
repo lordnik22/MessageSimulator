@@ -14,29 +14,44 @@
  * limitations under the License.
  */
 
- package com.app;
+package com.app;
 
- import org.springframework.beans.factory.annotation.Autowired;
- import org.springframework.kafka.core.KafkaTemplate;
- import org.springframework.web.bind.annotation.PathVariable;
- import org.springframework.web.bind.annotation.PostMapping;
- import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.GetMapping;
 
- import com.common.Foo1;
+import javax.annotation.PostConstruct;
 
- /**
-  * @author Gary Russell
-  * @since 2.2.1
-  */
- @RestController
- public class Controller {
+@RestController
+public class Controller {
 
-     @Autowired
-     private KafkaTemplate<Object, Object> template;
+    @Autowired
+    private KafkaTemplate<Object, Object> template;
 
-     @GetMapping(path = "/create/start/{interval}")
-     public void start(@PathVariable String interval) {
-        Application->start();
+    private Application app;
+
+    @PostConstruct
+    public void init() {
+        System.out.println("Controller initialized!");
+        this.app = Application.getInstance();
     }
 
- }
+    @GetMapping(path = "/start")
+    public void start() {
+        this.app.start();
+    }
+
+    @GetMapping(path = "/stop")
+    public void stop() {
+        this.app.stop();
+    }
+
+    @GetMapping(path = "/interval/{interval}")
+    public void interval(@PathVariable int interval) {
+        this.app.interval(interval);
+    }
+
+}

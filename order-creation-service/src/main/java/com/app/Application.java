@@ -41,23 +41,22 @@ import org.springframework.kafka.support.converter.JsonMessageConverter;
 import org.springframework.kafka.support.converter.RecordMessageConverter;
 import org.springframework.util.backoff.FixedBackOff;
 
-// import com.common.Foo2;
-
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Sample shows use of a dead letter topic.
-*
-* @author Gary Russell
-* @since 2.2.1
-*
-*/
+
 @SpringBootApplication
 public class Application {
 
     private final Logger logger = LoggerFactory.getLogger(Application.class);
     private static Boolean running = false;
+    private int interval = 5000;
+
+    private static Application INSTANCE;
+
+    public void Application() {
+        INSTANCE = this;
+    }
 
     @Autowired
     private KafkaTemplate<Object, Object> kafkaTemplate;
@@ -84,18 +83,26 @@ public class Application {
                     System.out.println("Idle");
                 }
 
-                Thread.sleep(Math.random() * 10000);
+                // Thread.sleep(Math.random() * 10000);
+                Thread.sleep(this.interval);
                 i++;
             }
 		};
 	}
 
     public void start() {
+        System.out.println("START");
         this.running = true;
     }
 
     public void stop() {
+        System.out.println("STOP");
         this.running = false;
+    }
+
+    public void interval(int interval) {
+        System.out.println(String.format("SET Interval to %dms", interval));
+        this.interval = interval;
     }
 
     public void toggle() {
@@ -104,5 +111,13 @@ public class Application {
 
     public Boolean isRunning() {
         return this.running;
+    }
+
+    public static Application getInstance() {
+        if(INSTANCE == null) {
+            INSTANCE = new Application();
+        }
+
+        return INSTANCE;
     }
 }

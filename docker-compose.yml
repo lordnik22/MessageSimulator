@@ -1,4 +1,5 @@
-version: '2'
+version: "3.9"
+
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
@@ -35,11 +36,16 @@ services:
     depends_on:
       - kafka
     build: order-creation-service
+    ports:
+      - 8082:8082
 
   order-export-marker-service:
     depends_on:
       - kafka
     build: order-export-marker-service
+    ports:
+      - 8083:8083
+
 
 
 #  zipkin:
