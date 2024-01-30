@@ -4,11 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>ch.hslu.msed.messagesimulator</groupId>
-	<artifactId>kafka-order-shipping-service</artifactId>
+	<artifactId>kafka-order-picking-service</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>kafka-order-shipping-service</name>
+	<name>kafka-order-picking-service</name>
 	<description>Kafka order creation service</description>
 
 	<parent>

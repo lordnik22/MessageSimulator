@@ -49,12 +49,12 @@ services:
       - kafka
     build: order-fraud-detection-service
 
-  order-shipping-service:
-    depends_on:
-      - kafka
-    build: order-shipping-service
-
   order-picking-service:
     depends_on:
       - kafka
     build: order-picking-service
+
+  order-shipping-service:
+    depends_on:
+      - kafka
+    build: order-shipping-service

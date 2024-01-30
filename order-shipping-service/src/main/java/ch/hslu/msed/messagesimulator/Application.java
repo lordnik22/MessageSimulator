@@ -1,18 +1,18 @@
 /*
-* Copyright 2018-2022 the original author or authors.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      https://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright 2018-2022 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package ch.hslu.msed.messagesimulator;
 
@@ -43,7 +43,7 @@ public class Application implements CommandLineRunner {
 
     @Bean
     public NewTopic topic() {
-        return new NewTopic("orderForPicking", 1, (short) 1);
+        return new NewTopic("orderForShipping", 1, (short) 1);
     }
 
     @Override
@@ -51,24 +51,12 @@ public class Application implements CommandLineRunner {
         Thread.currentThread().join();
     }
 
-    @KafkaListener(id = "orders", topics = "orderForPicking")
+    @KafkaListener(id = "orders", topics = "orderForShipping")
     public void listen(String msg) {
-        pickAvailablePositions(new Gson().fromJson(msg, Order.class));
+        shipOrder(new Gson().fromJson(msg, Order.class));
     }
 
-    private void pickAvailablePositions(Order order) {
-        if (order.isPartialDeliveryEnabled()) {
-            kafkaTemplate.send("orderForShipping", order);
-            System.out.printf("Ship partial of order %d", order.getNumber());
-        } else {
-            if ((new Random()).nextInt(10) == 0) {
-                order.setPartialDeliveryEnabled(true);
-                System.out.printf("Not all positions on order %d are available", order.getNumber());
-                kafkaTemplate.send("orderForPicking", order);
-            } else {
-                System.out.printf("Ship order %d", order.getNumber());
-                kafkaTemplate.send("orderForShipping", order);
-            }
-        }
+    private void shipOrder(Order order) {
+        System.out.printf("Order %d has been shipped", order.getNumber());
     }
 }
