@@ -1,4 +1,4 @@
-ch/hslu/msed/Customer.class
-ch/hslu/msed/Order.class
-ch/hslu/msed/PaymentMethod.class
-ch/hslu/msed/Position.class
+ch\hslu\msed\messagesimulator\PaymentMethod.class
+ch\hslu\msed\messagesimulator\Customer.class
+ch\hslu\msed\messagesimulator\Order.class
+ch\hslu\msed\messagesimulator\Position.class

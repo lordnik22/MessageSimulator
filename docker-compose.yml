@@ -26,7 +26,7 @@ services:
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     ports:
-      - 8085:8080
+      - "8085:8080"
     environment:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
@@ -37,14 +37,14 @@ services:
       - kafka
     build: order-creation-service
     ports:
-      - 8082:8082
+      - "8082:8082"
 
   order-export-marker-service:
     depends_on:
       - kafka
     build: order-export-marker-service
     ports:
-      - 8083:8083
+      - "8083:8083"
 
 
 
