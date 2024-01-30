@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -32,7 +33,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 
 
 @SpringBootApplication
-public class Application {
+public class Application implements CommandLineRunner {
 
     private final Logger logger = LoggerFactory.getLogger(Application.class);
     private static Boolean running = false;
@@ -56,24 +57,23 @@ public class Application {
         return new NewTopic("orderCreated", 1, (short) 1);
     }
 
-    @Bean
-	@Profile("default") // Don't run from test(s)
-	public ApplicationRunner runner() {
-		return args -> {
-            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-            OrderGenerator og = new OrderGenerator();
-            while(true) {
-                if (running) {
-                    kafkaTemplate.send("orderCreated", og.createRandomOrder());
-                    System.out.println("Send message");
-                } else {
-                    System.out.println("Idle");
-                }
-
-                Thread.sleep(interval);
+    @Override
+    public void run(String... args) throws Exception {
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        OrderGenerator og = new OrderGenerator();
+        Order order;
+        while(true) {
+            if (running) {
+                order = og.createRandomOrder();
+                System.out.printf("New order %d", order.getNumber());
+                kafkaTemplate.send("orderCreated", order);
+            } else {
+                System.out.println("Idle");
             }
-		};
-	}
+
+            Thread.sleep(interval);
+        }
+    }
 
     public void start() {
         System.out.println("START");

@@ -38,14 +38,11 @@ public class OrderGenerator {
         int min = 1000;
         int max = 9999;
 
-        Random random = new Random();
-        return random.nextInt(max - min + 1) + min;
+        return (new Random()).nextInt(max - min + 1) + min;
     }
 
     private Customer getRandomOrExistingCustomer() {
-        Random random = new Random();
-
-        return (random.nextInt(10) == 0) && customerGenerated ? Customer.getRandomCustomer() : this.createRandomCustomer();
+        return (new Random().nextInt(10) == 0) && customerGenerated ? Customer.getRandomCustomer() : this.createRandomCustomer();
     }
 
     private Customer createRandomCustomer() {
@@ -59,8 +56,7 @@ public class OrderGenerator {
     }
 
     public static String getRandomGender() {
-        Random random = new Random();
-        return (random.nextInt(2) == 0) ? "M" : "F";
+        return ((new Random()).nextInt(2) == 0) ? "M" : "F";
     }
 
     private List<Position> getRandomListOfPositions() {
@@ -91,8 +87,7 @@ public class OrderGenerator {
     }
 
     private static PaymentMethod getRandomPaymentMethod() {
-        Random random = new Random();
         PaymentMethod[] paymentMethods = PaymentMethod.values();
-        return paymentMethods[random.nextInt(paymentMethods.length)];
+        return paymentMethods[(new Random()).nextInt(paymentMethods.length)];
     }
 }

@@ -17,10 +17,12 @@
 package ch.hslu.msed.messagesimulator;
 
 import com.google.gson.Gson;
+import org.apache.kafka.clients.admin.NewTopic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -29,7 +31,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 
 @SpringBootApplication
-public class Application {
+public class Application implements CommandLineRunner {
 
     private final Logger logger = LoggerFactory.getLogger(Application.class);
 
@@ -40,24 +42,33 @@ public class Application {
         SpringApplication.run(Application.class, args).close();
     }
 
-	@Bean
-	@Profile("default") // Don't run from test(s)
-	public ApplicationRunner runner() {
-		return args -> {
-            while(true) {
-                Thread.sleep(10000);
-            }
-		};
-	}
+    @Bean
+    public NewTopic topic1() {
+        return new NewTopic("orderForExport", 1, (short) 1);
+    }
+    @Bean
+    public NewTopic topic2() {
+        return new NewTopic("orderForProcessing", 1, (short) 1);
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        Thread.currentThread().join();
+    }
 
     @KafkaListener(id = "orders", topics = "orderCreated")
 	public void listen(String msg) {
-        System.out.println(msg);
-        Gson gson = new Gson();
-        Order order = gson.fromJson(msg, Order.class);
-		logger.info("Received new order");
-		logger.info("OrderNumber: " + order.getNumber());
-		logger.info("Value: " + order.getOrderAmount());
+        maybeSendToExport(new Gson().fromJson(msg, Order.class));
 	}
+
+    private void maybeSendToExport(Order order) {
+        if (order.getCustomer().getZip() > 9000) {
+            System.out.printf("Export order %d", order.getNumber());
+            kafkaTemplate.send("orderForExport", order);
+        } else {
+            System.out.printf("Process order %d", order.getNumber());
+            kafkaTemplate.send("orderForProcessing", order);
+        }
+    }
 
 }

@@ -21,6 +21,9 @@
     <modules>
         <module>order-creation-service</module>
         <module>order-export-marker-service</module>
+        <module>order-fraud-detection-service</module>
+        <module>order-picking-service</module>
+        <module>order-shipping-service</module>
         <module>order-models</module>
     </modules>
 </project>

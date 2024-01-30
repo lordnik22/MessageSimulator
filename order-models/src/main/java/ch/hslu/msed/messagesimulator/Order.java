@@ -8,6 +8,7 @@ public class Order {
     private List<Position> positions;
     private PaymentMethod paymentMethod;
     private boolean partialDeliveryEnabled = false;
+    private ShippingMethod shippingMethod = ShippingMethod.ECONOMY;
 
     public Order(int number, Customer customer, PaymentMethod paymentMethod, List<Position> positions) {
         this.number = number;
@@ -69,5 +70,13 @@ public class Order {
             totalCost += position.getAmount() * position.getPrice();
         }
         return totalCost;
+    }
+
+    public ShippingMethod getShippingMethod() {
+        return shippingMethod;
+    }
+
+    public void setShippingMethod(ShippingMethod shippingMethod) {
+        this.shippingMethod = shippingMethod;
     }
 }

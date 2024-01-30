@@ -43,20 +43,18 @@ services:
     depends_on:
       - kafka
     build: order-export-marker-service
-    ports:
-      - "8083:8083"
 
+  order-fraud-detection-service:
+    depends_on:
+      - kafka
+    build: order-fraud-detection-service
 
+  order-shipping-service:
+    depends_on:
+      - kafka
+    build: order-shipping-service
 
-#  zipkin:
-#    image: java:openjdk-8u91-jdk
-#    working_dir: /app
-#    volumes:
-#      - ./zipkin-server/build/libs:/app
-#    command: java -jar /app/zipkin-server.jar --server.port=9411
-#    links:
-#      - rabbitmq
-#    ports:
-#      - "9411:9411"
-#    environment:
-#      RABBIT_HOST: rabbitmq
+  order-picking-service:
+    depends_on:
+      - kafka
+    build: order-picking-service
