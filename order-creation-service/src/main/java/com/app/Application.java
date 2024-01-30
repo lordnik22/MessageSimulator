@@ -77,17 +77,16 @@ public class Application {
 	public ApplicationRunner runner() {
 		return args -> {
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            OrderGenerator og = new OrderGenerator();
             while(true) {
                 if (this.running) {
-                    kafkaTemplate.send("orderCreated", "test_" + timestamp.getTime());
+                    kafkaTemplate.send("orderCreated", og.createRandomOrder());
                     System.out.println("Send message");
                 } else {
                     System.out.println("Idle");
                 }
 
-                // Thread.sleep(Math.random() * 10000);
                 Thread.sleep(this.interval);
-                System.out.println(String.format("Interval set to %dms", this.interval));
             }
 		};
 	}
@@ -105,7 +104,6 @@ public class Application {
     public void interval(int interval) {
         System.out.println(String.format("SET Interval to %dms", interval));
         this.interval = interval;
-        System.out.println(String.format("Interval set to %dms", this.interval));
     }
 
     public void toggle() {
@@ -117,7 +115,7 @@ public class Application {
     }
 
     public static Application getInstance() {
-        if(INSTANCE == null) {
+        if (INSTANCE == null) {
             INSTANCE = new Application();
         }
 

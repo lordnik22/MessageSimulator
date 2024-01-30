@@ -41,18 +41,16 @@ import org.springframework.kafka.support.converter.JsonMessageConverter;
 import org.springframework.kafka.support.converter.RecordMessageConverter;
 import org.springframework.util.backoff.FixedBackOff;
 
-// import com.common.Foo2;
-
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Sample shows use of a dead letter topic.
-*
-* @author Gary Russell
-* @since 2.2.1
-*
-*/
+import ch.hslu.msed.Order;
+import ch.hslu.msed.PaymentMethod;
+import ch.hslu.msed.Customer;
+import ch.hslu.msed.Position;
+
+import com.google.gson.Gson;
+
 @SpringBootApplication
 public class Application {
 
@@ -75,9 +73,12 @@ public class Application {
 		};
 	}
 
-    @KafkaListener(id = "fooGroup", topics = "topic1")
-	public void listen(String foo) {
-		logger.info("Received: " + foo);
+    @KafkaListener(id = "orders", topics = "orderCreated")
+	public void listen(String msg) {
+        Order order = new Gson().fromJson(msg, Order.class);
+		logger.info("Received new order");
+		logger.info("OrderNumber: " + order.getNumber());
+		logger.info("Value: " + order.getOrderAmount());
 	}
 
 }
