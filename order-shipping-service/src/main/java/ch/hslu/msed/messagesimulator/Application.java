@@ -57,6 +57,6 @@ public class Application implements CommandLineRunner {
     }
 
     private void shipOrder(Order order) {
-        System.out.printf("Order %d has been shipped", order.getNumber());
+        System.out.printf("Order %d has been shipped%n", order.getNumber());
     }
 }

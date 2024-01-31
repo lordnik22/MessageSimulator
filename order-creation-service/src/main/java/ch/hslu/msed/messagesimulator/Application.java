@@ -65,7 +65,7 @@ public class Application implements CommandLineRunner {
         while(true) {
             if (running) {
                 order = og.createRandomOrder();
-                System.out.printf("New order %d", order.getNumber());
+                System.out.printf("New order %d%n", order.getNumber());
                 kafkaTemplate.send("orderCreated", order);
             } else {
                 System.out.println("Idle");

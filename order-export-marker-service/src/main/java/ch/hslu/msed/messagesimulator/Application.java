@@ -63,10 +63,10 @@ public class Application implements CommandLineRunner {
 
     private void maybeSendToExport(Order order) {
         if (order.getCustomer().getZip() > 9000) {
-            System.out.printf("Export order %d", order.getNumber());
+            System.out.printf("Export order %d%n", order.getNumber());
             kafkaTemplate.send("orderForExport", order);
         } else {
-            System.out.printf("Process order %d", order.getNumber());
+            System.out.printf("Process order %d%n", order.getNumber());
             kafkaTemplate.send("orderForProcessing", order);
         }
     }

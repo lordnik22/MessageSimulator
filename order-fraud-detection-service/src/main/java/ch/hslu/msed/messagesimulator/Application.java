@@ -59,10 +59,10 @@ public class Application implements CommandLineRunner {
             order.getCustomer().getCustomerStatus().equals("NEW")
             && order.getPaymentMethod().equals(PaymentMethod.INVOICE)
             && order.getOrderAmount() >= 100) {
-            System.out.printf("Possible fraud on order %d", order.getNumber());
+            System.out.printf("Possible fraud on order %d%n", order.getNumber());
             order.setShippingMethod(ShippingMethod.SIGNATURE);
         }
-        System.out.printf("Pick order %d", order.getNumber());
+        System.out.printf("Pick order %d%n", order.getNumber());
         kafkaTemplate.send("orderForPicking", order);
     }
 }

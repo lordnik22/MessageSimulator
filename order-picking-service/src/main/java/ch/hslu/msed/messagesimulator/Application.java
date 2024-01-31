@@ -57,14 +57,14 @@ public class Application implements CommandLineRunner {
     private void pickAvailablePositions(Order order) {
         if (order.isPartialDeliveryEnabled()) {
             kafkaTemplate.send("orderForShipping", order);
-            System.out.printf("Ship partial of order %d", order.getNumber());
+            System.out.printf("Ship partial of order %d%n", order.getNumber());
         } else {
             if ((new Random()).nextInt(10) == 0) {
                 order.setPartialDeliveryEnabled(true);
-                System.out.printf("Not all positions on order %d are available", order.getNumber());
+                System.out.printf("Not all positions on order %d are available%n", order.getNumber());
                 kafkaTemplate.send("orderForPicking", order);
             } else {
-                System.out.printf("Ship order %d", order.getNumber());
+                System.out.printf("Ship order %d%n", order.getNumber());
                 kafkaTemplate.send("orderForShipping", order);
             }
         }
