@@ -1,21 +1,26 @@
 # MessageSimulator
-We try to learn hybride, message-orientierte and reactive and the effects of it 
+This is a learning project for message oriented programming.
+It's purpose is education and it's goal is a prototyp that handles the order processing of a
+e-commerce store.
 
+## Running the application
 
-## Running the application locally
+### Prerequisites
+To run this prototype you need to have the following software installed
 
-Open sample01 with eclipse or intellij. See pom.xml for java
-requirements. Make a maven reload.
+- Maven
+- Java
+- Docker
 
-
-Steps
-1. docker-compose up
-2. Start sample-application within intellij
+### Usage
+1. Run ```mvn package && docker compose up -d```
+2. Start `http://localhost:8081/start`
+3. Crank the volume to 11 with `http://localhost/interval/200`
+4. Stop the madness with `http://localhost:8081/stop`
 
 
 ## Documentation
 
-https://drive.google.com/drive/folders/1E3qmszlbwIsQAW5mp99LMlFbxcFYdoH-
 
 ## In beginning there was chaos
 ```text
@@ -27,7 +32,7 @@ https://drive.google.com/drive/folders/1E3qmszlbwIsQAW5mp99LMlFbxcFYdoH-
 ```
 
 - zookeeper = coordination service for distributed applications
-- KRaft =  Apache Kafka Raft (KRaft) is the consensus protocol that was introduced in KIP-500 to remove Apache Kafka’s dependency on ZooKeeper for metadata management. 
+- KRaft =  Apache Kafka Raft (KRaft) is the consensus protocol that was introduced in KIP-500 to remove Apache Kafka’s dependency on ZooKeeper for metadata management.
 
 https://cwiki.apache.org/confluence/display/KAFKA/Compatibility+Matrix
 
