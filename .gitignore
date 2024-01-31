@@ -1,4 +1,10 @@
 .idea/**/*
-target/
 .DS_Store
 .vscode
+
+order-creation-service/target
+order-export-marker-service/target
+order-fraud-detection-service/target
+order-models/target
+order-picking-service/target
+order-shipping-service/target
