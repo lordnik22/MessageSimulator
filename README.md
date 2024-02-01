@@ -1,82 +1,27 @@
 # MessageSimulator
 This is a learning project for message oriented programming.
-It's purpose is education and it's goal is a prototyp that handles the order processing of a
-e-commerce store.
+It purpose is education and the goal is a prototype that processes orders of an e-commerce store.
 
 ## Running the application
 
 ### Prerequisites
-To run this prototype you need to have the following software installed
-
+To run this prototype following software needs to be installed:
 - Maven
 - Java
 - Docker
 
 ### Usage
-1. Run ```mvn package && docker compose up -d```
+1. Run ```mvn clean package && docker compose up -d```
 2. Start `http://localhost:8081/start`
-3. Crank the volume to 11 with `http://localhost/interval/200`
+4. Check the topics and messages via kafka-ui `http://localhost:8080`
+3. Increase the message generation `http://localhost:8081/interval/200`
 4. Stop the madness with `http://localhost:8081/stop`
 
-
-## Documentation
-
-
-## In beginning there was chaos
-```text
-||||
-||||
-||||
-\||/
- \/
-```
-
-- zookeeper = coordination service for distributed applications
-- KRaft =  Apache Kafka Raft (KRaft) is the consensus protocol that was introduced in KIP-500 to remove Apache Kafka’s dependency on ZooKeeper for metadata management.
-
-https://cwiki.apache.org/confluence/display/KAFKA/Compatibility+Matrix
-
-https://docs.spring.io/spring-kafka/reference/quick-tour.html
-
-https://docs.spring.io/spring-kafka/reference/kafka/connecting.html
-
-https://docs.confluent.io/home/overview.html
-
-https://docs.spring.io/spring-kafka/api/org/springframework/kafka/core/package-summary.html
-
-https://kafka.apache.org/quickstart
-```bash
-docker-compose up -d
-docker pull rabbitmq
-docker pull apache/activemq-artemis
-
-```
-
-## Microservices for the Win
-### Tracing of Messages
-
-https://microservices.io/patterns/observability/distributed-tracing.html
-
-https://zipkin.io/
-
-### Saga pattern for transaction spanning multiple services
-
-
-#### Chereography
-https://docs.axoniq.io/reference-guide/v/3.1/part-ii-domain-logic/sagas
-
-#### Orchestration
-
-https://camel.apache.org/components/4.0.x/eips/saga-eip.html
-## Compare API specs/protocols
-
-https://docs.spring.io/spring-boot/docs/current/reference/html/messaging.html#messaging.amqp
-
-- https://www.oracle.com/java/technologies/java-message-service.html
-
-Java Message Service (JMS) vs Advanced Message Queuing Protocol (AMQP)
-
-## Compare Message Broker
+#### Debugging
+If the services don't appear with ```docker container ls``` or http://localhost:8081/start displays an HTTP-Error.
+Retry ```docker compose up -d```
+## Technical Documentation
+### Compare Message Broker
 
 Apache ActiveMQ is a great workhorse full of features and nice stuff.
 It's not the fastest MQ software around but fast enough for most use
@@ -105,46 +50,59 @@ area of MQ and brokers, I guess Kafka is overkill. On the other hand -
 if you have a decent sized server cluster and wonder how to push as
 many messages as possible through it - give Kafka a spin!
 
+### Messaging Protocols and API
+- AMQP = Advanced Message Queuing Protocol, application layer protocol,  binary based
+- STOMP / TTMP = Streaming Text Oriented Messaging Protocol, text-based protocol
+- MQTT = Message Queuing Telemetry Transport, network protocol
+- JMS = Jackarta Messaging, Java API to support communication models: point-to-point and publish-and-subscribe.
+- WebSockets = HTTP-Connection can be converted to WebSocket, making the communication bi-directional, application layer protocol
 
-### What about RabbitMQ?
+### Kafka
+- zookeeper = coordination service for distributed applications
+- KRaft =  Apache Kafka Raft (KRaft) is the consensus protocol that was introduced in KIP-500 to remove Apache Kafka’s dependency on ZooKeeper for metadata management.
+- Apache Kafka = is a distributed event store and stream-processing platform.
 
-## Apache Arrow
+We decided to use Kafka in our prototype because it has a spring integration and a well documented API.
 
-https://www.dremio.com/open-source/apache-arrow/
+Links:
+- [Kafka Website] (https://kafka.apache.org/)
+- [Spring Integration] (https://docs.spring.io/spring-kafka/reference/quick-tour.html)
+- [Java API] (https://kafka.apache.org/32/javadoc/index.html)
+- [Spring API] (https://docs.spring.io/spring-kafka/api/org/springframework/kafka/core/package-summary.html)
+- [Compatibilty Matrix] (https://cwiki.apache.org/confluence/display/KAFKA/Compatibility+Matrix)
 
-## Kafka
-docker pull bitnami/kafka
+### Coordinated Transactions with the SAGA-Pattern
+- ACID transactions = Atomicity, consistency, isolation, durability
+- BASE transactions = Basic Availability, Soft state, Eventual consistency
 
+SAGA are used to realize BASE Transactions between multiple services by defining a compensating action, which restores the state in case of an error.
 
+Links:
+- [Pattern: Saga] (https://microservices.io/patterns/data/saga.html)
+- [Example using Choreography] (https://docs.axoniq.io/reference-guide/v/3.1/part-ii-domain-logic/sagas)
+- [Example using Orchestration] (https://camel.apache.org/components/4.0.x/eips/saga-eip.html)
 
-https://kafka.apache.org/
-https://kafka.apache.org/32/javadoc/index.html
-https://hub.docker.com/r/wurstmeister/kafka/
+### Tracing of Messages
 
+Enrich messages with a trace id by which log messages can be queried and analysed.
 
-## Message oriented programming with PHP
+Links:
+- [Pattern: Distributed Tracing] (https://microservices.io/patterns/observability/distributed-tracing.html)
+- [Tracing System: Zipkin] (https://zipkin.io/)
 
-Framework welches entsprechende Strukturen anbietet:
-- https://github.com/ecotoneframework/ecotone
+### Message oriented programming with PHP
 
-## Kafka ui?
+Because the current e-commerce is written in PHP, a thought was to use a PHP-messaging-framework.
 
-  kafka-ui:
-    container_name: kafka-ui
-    image: provectuslabs/kafka-ui:latest
-    ports:
-      - 8080:29093
-    environment:
-      DYNAMIC_CONFIG_ENABLED: 'true'
-    volumes:
-      - ~/kui/config.yml:/etc/kafkaui/dynamic_config.yaml
+Links:
+- [Ecotone] (https://github.com/ecotoneframework/ecotone)
 
-
-# Message Orientierte Logistik
+# Business Documentation
+## Message Orientierte Logistik
 
 Im Folgenden soll der Ablauf und die einzelnen Stationen der Logistik der haar-shop.ch aufgelistet werden. Die einzelnen Komponenten werden vereinfacht abgebildet.
 
-## Bestellungen generieren
+### Bestellungen generieren
 Ein Generator erzeugt konstant Bestellungen.
 Eine Bestellung besteht aus folgenden Eigenschaften:
 - Bestellnummer
@@ -166,67 +124,27 @@ Eine Bestellung besteht aus folgenden Eigenschaften:
 
 Eine generierte Bestellung hat den Status **importiert**.
 
-## Bestellungen prüfen
+### Bestellungen prüfen
 Importierte Bestellungen werden dann auf Sonderheiten geprüft.
 
-### Export
-Bestellungen aus einem bestimmten Nummernkreis, sollen in einer separaten Tabelle erfasst und für den weiteren Versand gesperrt werden.
+#### Export
+Bestellungen aus einem bestimmten Nummernkreis sollen in einer separaten Tabelle erfasst und für den weiteren Versand gesperrt werden.
 > Hintergrund: haar-shop.ch liefert grundsätzlich nur in die Schweiz. Jedoch gibt es in der Schweiz mit der Gemeinde Samnaun ein Zollausschlussgebiet. Bestellungen aus Samnaun müssen also als Exporte behandelt werden und entsprechende Dokumente beigelegt werden.
 
-### Betrugsversuch
-Es kommt immer wieder vor, dass es unter den Kunden Betrüger hat. Die folgenden Kriterien deuten auf Betrug hin und die Bestellungen werden dann entsprechend markiert und gegen Signatur versendet.
+#### Betrugsversuch
+Es kommt immer wieder vor, dass sich Kunden als Betrüger entpuppen. Die folgenden Kriterien deuten auf Betrug hin und die Bestellungen werden dann entsprechend markiert und gegen Signatur versendet.
 - Kundentyp: Neukunde
 - Bezahlmethode: Rechnung
 - Preis: >= CHF 100
 
-## Kommissionslisten erstellen
+### Kommissionslisten erstellen
 Die Produkte aus Bestellungen, welche komplett kommissionierbar sind, sollen in Kommissionslisten erfasst werden.
 
-## Kommissionierung simulieren
+### Kommissionierung simulieren
 Die Abarbeitung der Kommissionierungslisten soll simuliert werden. Wurden alle Bestellpositionen einer sich auf einer Kommissionierungsliste befindenden Bestellung kommissioniert, gilt die Bestellung als **verpackungsbereit**.
 
-## Teillieferungen aktivieren
-haar-shop.ch ist bestrebt, alle Bestellungen so schnell wie möglich zur Kund*in zu bringen. Gleichzeitig soll eine Bestellung möglichst komplett ausgeliefert werden. Sollte für eine Bestellung nicht alle Bestellpositionen verfügbar sein, wird die Verarbeitung so lange wie möglich herausgezögert, in der Hoffnung, dass die fehlenden Produkte im Verlauf des Tages noch angeliefert werden. Ab 17:00 wird auf allen pendenten Bestellungen die Teillieferung aktiviert.
+### Teillieferungen aktivieren
+haar-shop.ch ist bestrebt, alle Bestellungen so schnell wie möglich zum/zur Kunden/Kundin zu bringen. Gleichzeitig soll eine Bestellung möglichst komplett ausgeliefert werden. Sollte für eine Bestellung nicht alle Bestellpositionen verfügbar sein, wird die Verarbeitung so lange wie möglich herausgezögert, in der Hoffnung, dass die fehlenden Produkte im Verlauf des Tages noch angeliefert werden. Ab 17:00 wird auf allen pendenten Bestellungen die Teillieferung aktiviert.
 
-## Lagerbestände führen
-Normalerweise werden die Lagerbestände von dem Logistiksystem
-
-
-
-## SmartyPants
-
-SmartyPants converts ASCII punctuation characters into "smart" typographic punctuation HTML entities. For example:
-
-|                |ASCII                          |HTML                         |
-|----------------|-------------------------------|-----------------------------|
-|Single backticks|`'Isn't this fun?'`            |'Isn't this fun?'            |
-|Quotes          |`"Isn't this fun?"`            |"Isn't this fun?"            |
-|Dashes          |`-- is en-dash, --- is em-dash`|-- is en-dash, --- is em-dash|
-
-
-
-## UML diagrams
-
-You can render UML diagrams using [Mermaid](https://mermaidjs.github.io/). For example, this will produce a sequence diagram:
-
-```mermaid
-sequenceDiagram
-Alice ->> Bob: Hello Bob, how are you?
-Bob-->>John: How about you John?
-Bob--x Alice: I am good thanks!
-Bob-x John: I am good thanks!
-Note right of John: Bob thinks a long<br/>long time, so long<br/>that the text does<br/>not fit on a row.
-
-Bob-->Alice: Checking with John...
-Alice->John: Yes... John, how are you?
-```
-
-And this will produce a flow chart:
-
-```mermaid
-graph LR
-A[Square Rect] -- Link text --> B((Circle))
-A --> C(Round Rect)
-B --> D{Rhombus}
-C --> D
-```
+### Lagerbestände führen
+Normalerweise werden die Lagerbestände von dem Logistiksystem geführt.
